@@ -1,0 +1,15 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    
+}
+.button {
+    background-color: rgba(137, 43, 226, 0.486);
+    padding:8%;
+    font-size: 8%;
+    font: black;
+}
+body {
+    margin: 0;
+}
