@@ -1,0 +1,150 @@
+Part 1 :
+
+    Import the movie_db.sql file.
+    Or use your own movie db.
+
+Part 2 :
+	- Retrieve the name and the year of birth of each director
+		SELECT name, YEAR(birth_date) as year_of_birth
+		FROM directors
+
+	- Retrieve directors under 50 years old.
+		SELECT *, YEAR(NOW()) - YEAR(birth_date) as Age
+		FROM directors
+		WHERE YEAR(NOW()) - YEAR(birth_date) >= 50
+
+	- Retrieve the directors of American nationality
+		SELECT *
+		FROM directors
+		WHERE nationality = "USA"
+
+Part 3:
+	- Collect the movie that was the least visible at the box office
+		SELECT *
+		FROM movies
+		WHERE views = (
+			SELECT min(views)
+			FROM movies
+		)
+		LIMIT 1
+
+	- Collect the most popular movie at the box office
+		SELECT *
+		FROM movies
+		ORDER BY views
+		LIMIT 1
+
+	- Collect the 3 most viewed movies at the box office
+		SELECT *
+		FROM movies
+		ORDER BY views
+		LIMIT 3
+
+Part 4:
+	- For each movie, Retrieve its title, its year of release and the name of the director
+		SELECT title, release_year, name
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+
+	- For each movie, get all the information about it and the name of the director
+		SELECT m.*, name
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+
+
+	- Get the title of each movie and the name of the director, sorted alphabetically on the title of the movie.
+		SELECT title, name
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		ORDER BY title
+
+
+	- Same but sorted on the director's name.
+		SELECT title, release_year, name
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		ORDER BY name
+
+Part 5:
+	- Get all the movies from the director "George Lucas"
+		SELECT title
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		WHERE name = "George Lucas"
+
+	- Get all the director's movies that are not "George Lucas"
+		SELECT title
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		WHERE name != "George Lucas"
+
+	- Collect all movies whose director has the letter 's' in his name or first name.
+		SELECT title
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		WHERE name LIKE '%s%'
+
+
+Part 6:
+	- Get all the movies from the youngest to the oldest director
+		SELECT title
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		ORDER BY birth_date DESC
+
+	- Collect the number of movies by director (with the name of the director)
+
+		SELECT director_id, name, COUNT(movie_id) AS NumberOfMovies
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		GROUP BY director_id
+
+Part 7:
+	- Get the sum of the views of all the movies of the director 'George Lucas'
+		SELECT SUM(views)
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		WHERE name = "George Lucas"
+
+	- Get the sum of views of all movies by director
+		SELECT director_id, name, SUM(views)
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		GROUP BY director_id
+
+	- Get average views of all movies by director
+		SELECT director_id, name, AVG(views)
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		GROUP BY director_id
+
+	- Get the sum of the views by nationality (of the director)
+		SELECT nationality, SUM(views)
+		FROM movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		GROUP BY nationality
+
+Part 8:
+	- Get the director who makes the most views.
+		SELECT director_id, name, SUM(views) as SumViews
+		FROM directors
+		INNER JOIN directors d ON d.director_id = m.director_id
+		GROUP BY director_id
+		ORDER BY SumViews
+		LIMIT 1
+
+
+	- Retrieve nationalities (director) who made over 200,000 views
+		SELECT nationality, SUM(views) AS SumViews
+		FROM directors
+		INNER JOIN directors d ON d.director_id = m.director_id
+		GROUP BY nationality
+		HAVING SumViews > 200000
+
+Part 9:
+	- All director George Lucas's movies have made 20 more box office hits. Update these movies.
+
+		UPDATE movies m
+		INNER JOIN directors d ON d.director_id = m.director_id
+		SET views = views + 20
+		WHERE d.name = "George Lucas"

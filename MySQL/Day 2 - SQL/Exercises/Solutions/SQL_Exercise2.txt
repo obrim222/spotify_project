@@ -1,0 +1,48 @@
+-- Explanation :
+
+Now, there is a 'novels' table that has the same fields as the 'books' table.
+For this exercises, use union command.
+
+-- Queries :
+	- Recover all novels and all books in one query.
+	SELECT title, date_of_release
+	FROM novels
+	UNION 
+	SELECT title, date_of_release
+	FROM books
+
+	- Collect all novels and all books from 2018
+	SELECT title, date_of_release
+	FROM novels
+	WHERE YEAR(date_of_release) = '2018' 
+	UNION 
+	SELECT title, date_of_release
+	FROM books
+	WHERE YEAR(date_of_release) = '2018' 
+
+	- Collect all the novels and all the books with the author.
+	SELECT title, date_of_release, author_id
+	FROM novels
+	UNION 
+	SELECT title, date_of_release, author_id
+	FROM books
+
+	- Get the total price per author (books and novels combined).
+
+	SELECT finalTable.author_id, SUM(finalTable.price)
+	FROM
+		(SELECT author_id, price
+		FROM novels
+		UNION 
+		SELECT author_id, price
+		FROM books) as finalTable
+	GROUP BY finalTable.author_id
+
+
+	- Get the total price for all books AND all novels (books and novels seperated).
+
+	SELECT author_id, SUM(price) as totalPrice
+	FROM novels
+	UNION 
+	SELECT author_id, SUM(price) as totalPrice
+	FROM books
